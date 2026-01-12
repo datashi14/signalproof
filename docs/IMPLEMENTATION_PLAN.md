@@ -4,26 +4,26 @@ Tagline: Evidence-first AI research teammate that turns messy claims into transp
 
 ## Phase 1: Foundation & Project Setup
 
-- [ ] Initialize Next.js project with TypeScript and Tailwind CSS
-- [ ] Configure Supabase (Auth, Postgres, Storage)
-- [ ] Establish directory structure for Agents, Services, and UI components
-- [ ] Create `docs/schema.sql` for database initialization
+- [x] Initialize Next.js project with TypeScript and Tailwind CSS
+- [x] Configure Supabase (Auth, Postgres, Storage)
+- [x] Establish directory structure for Agents, Services, and UI components
+- [x] Create `docs/schema.sql` for database initialization
 
 ## Phase 2: Agent Architecture & Core Schemas
 
-- [ ] Define Zod schemas for all Agent inputs and outputs (Planner, Extractor, Research, Verifier, Synthesizer)
-- [ ] Implement `AgentRunner` module for structured model routing and cost tracking
+- [x] Define Zod schemas for all Agent inputs and outputs (Planner, Extractor, Research, Verifier, Synthesizer)
+- [x] Implement `AgentRunner` module for structured model routing and cost tracking
 - [ ] Create basic evaluation harness for agent performance validation
 
 ## Phase 3: Research Logic & Graph Scoring
 
 - [ ] Implement `ClaimExtractor` and `EvidenceCollector` services
-- [ ] Build the Directed SSSP (Single Source Shortest Path) Graph Scorer for evidence credibility
-- [ ] Integrate Trigger.dev for background research workflows
+- [x] Build the Directed SSSP (Single Source Shortest Path) Graph Scorer for evidence credibility
+- [x] Integrate Trigger.dev for background research workflows
 
 ## Phase 4: Frontend Development (Research Pack)
 
-- [ ] Build Subject Search and Workflow Trigger UI
+- [x] Build Subject Search and Workflow Trigger UI
 - [ ] Implement real-time progress updates (SSE or WebSockets)
 - [ ] Create the "Research Pack" page:
   - Claims Table

@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SignalProof 🛡️
 
-## Getting Started
+**Evidence-first AI research teammate that turns messy claims into transparent, reviewable research packs.**
 
-First, run the development server:
+SignalProof ensures no unverifiable claims ever reach your final report. By linking every conclusion to hard evidence and computing credibility paths using graph theory, it keeps humans in control while accelerating deep research.
+
+## ✨ Key Features
+
+- **Evidence-First Engine**: Extracts atomic claims and verifies them against snippets found across the web.
+- **5-Agent System**: Structured workflows using Planner, Extractor, Research, Verifier, and Synthesiser agents.
+- **SSSP Credibility Graph**: Uses a Directed Single Source Shortest Path (SSSP) algorithm to compute the "cost of truth" for every claim.
+- **Trigger.dev Workflows**: Background research jobs that don't block the UI, with real-time status updates.
+- **Evaluation Harness**: Non-negotiable precision/recall testing against high-quality datasets.
+- **Transparent Synthesis**: Summaries that cite every fact with an Evidence ID—no hallucinations allowed.
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS, Lucide Icons.
+- **AI Engine**: Vercel AI SDK (OpenAI & Anthropic), Zod for structured output validation.
+- **Workflow**: Trigger.dev for background job orchestration.
+- **Storage**: Supabase (Postgres with UUIDs and JSONB for graph/cost tracking).
+- **Observability**: Built-in cost and latency tracking per agent run.
+
+## 📐 Architecture: The Research Lifecycle
+
+1. **Planner Agent**: Maps out the research strategy based on subject and context.
+2. **Claim Extractor**: Breaks down resumes, bios, or raw text into atomic, testable claims.
+3. **Research Agent**: Scours sources (GitHub, LinkedIn, Blogs, News) for snippets.
+4. **Verifier Agent**: Supports/Contradicts claims using extracted evidence.
+5. **SSSP Scorer**: Computes the shortest (most credible) path from Claim → Evidence → Source.
+6. **Synthesiser Agent**: Compiles the final Research Pack with human-readable uncertainty notes.
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 20+
+- Supabase Account
+- Trigger.dev Account
+- OpenAI/Anthropic API Keys
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Clone the repository
+git clone https://github.com/datashi14/signalproof.git
+cd signalproof
+
+# Install dependencies
+npm install
+
+# Setup environment variables
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Running the App
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Start the development server
+npm run dev
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Start Trigger.dev worker
+npx @trigger.dev/cli@latest dev
+```
 
-## Learn More
+### Evaluation
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Run the quality assessment suite
+npm run eval
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📊 Database Schema
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The database is built on Supabase/Postgres. See `docs/schema.sql` for the full table definitions including:
 
-## Deploy on Vercel
+- `research_runs`: Tracking costs and latency.
+- `claims`: Atomic research findings.
+- `graph_paths`: SSSP results for credibility scoring.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ⚖️ Security
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **PII Management**: Minimal data retention by design.
+- **Prompt Injection Defense**: Tool instructions are stripped from retrieved text.
+- **Transparency**: Full audit logs for every reviewer decision.
+
+---
+
+Built with ❤️ by SignalProof Labs.
