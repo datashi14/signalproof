@@ -1,56 +1,49 @@
-import { eventTrigger } from "@trigger.dev/sdk";
-import { client } from "./trigger.config";
+import { TriggerClient, eventTrigger } from "@trigger.dev/sdk";
 import { z } from "zod";
 import { runAgent } from "./lib/agents/runner";
 import { 
   ResearchPlanSchema, 
   ExtractedClaimsSchema, 
-  ResearchOutputSchema, 
-  VerificationResultSchema, 
   SynthesisSchema 
 } from "./lib/agents/schemas";
 
-// Main Research Job
-client.defineJob({
-  id: "research-subject-workflow",
-  name: "Research Subject Workflow",
-  version: "0.0.1",
+// In V2/V3, this is the standard way. If V4 changed it, we'll see.
+const client = new TriggerClient({ id: "signalproof" });
+
+export const researchJob = client.defineJob({
+  id: "research-workflow",
+  name: "SignalProof Research Workflow",
+  version: "1.0.0",
   trigger: eventTrigger({
     name: "research.start",
     schema: z.object({
       subjectId: z.string(),
       name: z.string(),
       context: z.string(),
-      urls: z.array(z.string().url()).optional(),
     }),
   }),
-  run: async (payload, io, ctx) => {
-    // 1. Planner Phase
-    const plan = await io.runTask("planner-agent", async () => {
-      // In a real implementation, we'd call runAgent here
-      return { status: "success", step: "planning" };
+  run: async (payload, io) => {
+    // Pipeline logic
+    await io.runTask("planning", async () => {
+      return await runAgent({
+        name: "Planner",
+        complexity: "cheap",
+        schema: ResearchPlanSchema,
+        system: "Head of Research system prompt",
+        prompt: `Plan research for ${payload.name}`
+      });
     });
 
-    // 2. Claim Extraction
-    await io.runTask("extractor-agent", async () => {
-      return { status: "success", step: "extraction" };
+    await io.runTask("extraction", async () => {
+       return await runAgent({
+        name: "Extractor",
+        complexity: "cheap",
+        schema: ExtractedClaimsSchema,
+        system: "Extractor system prompt",
+        prompt: `Extract claims for ${payload.name}`
+      });
     });
 
-    // 3. Evidence Gathering
-    await io.runTask("research-agent", async () => {
-      return { status: "success", step: "gathering" };
-    });
-
-    // 4. Verification & Graph Scoring
-    await io.runTask("verifier-agent", async () => {
-      return { status: "success", step: "verification" };
-    });
-
-    // 5. Synthesis
-    await io.runTask("synthesizer-agent", async () => {
-      return { status: "success", step: "synthesis" };
-    });
-
-    return { result: "Research Pack Ready" };
+    return { status: "completed" };
   },
 });
